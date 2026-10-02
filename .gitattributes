@@ -1,0 +1,3 @@
+# Line Feed for all except *.cmd
+* text=auto eol=lf
+*.{[cC][mM][dD]} text eol=crlf
