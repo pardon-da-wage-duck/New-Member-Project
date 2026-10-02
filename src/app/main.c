@@ -16,11 +16,13 @@
 #include <stm32g4xx_hal.h>
 
 
-void heartbeat_task(void *pvParameters) {
+void GPIO_task(void *pvParameters) {
     (void) pvParameters;
     while(true) {
         core_GPIO_toggle_heartbeat();
-        vTaskDelay(100 * portTICK_PERIOD_MS);
+        vTaskDelay(500 * portTICK_PERIOD_MS);
+        core_GPIO_toggle_heartbeat();
+        vTaskDelay(500 * portTICK_PERIOD_MS);
     }
 }
 
@@ -33,8 +35,8 @@ int main(void) {
 
     if (!core_clock_init()) error_handler();
     if (!core_CAN_init(FDCAN1, 1000000)) error_handler();
-
-    int err = xTaskCreate(heartbeat_task, "heartbeat", 1000, NULL, 4, NULL);
+    
+    int err = xTaskCreate(GPIO_task, "heartbeat", 2000, NULL, 4, NULL);
     if (err != pdPASS) {
         error_handler();
     }
