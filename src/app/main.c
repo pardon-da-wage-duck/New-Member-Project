@@ -19,9 +19,15 @@
 void GPIO_task(void *pvParameters) {
     (void) pvParameters;
     while(true) {
-        core_GPIO_toggle_heartbeat();
+        //Set GPIO pins high for 500ms
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
         vTaskDelay(500 * portTICK_PERIOD_MS);
-        core_GPIO_toggle_heartbeat();
+        //set GPIO pins low for 500ms
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
         vTaskDelay(500 * portTICK_PERIOD_MS);
     }
 }
@@ -30,8 +36,11 @@ int main(void) {
     HAL_Init();
 
     // Drivers
-    core_heartbeat_init(GPIOA, GPIO_PIN_8);
-    core_GPIO_set_heartbeat(GPIO_PIN_RESET);
+    //Initialize GPIO pins for heartbeat
+    core_GPIO_init(GPIOA, GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+    core_GPIO_init(GPIOA, GPIO_PIN_9, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+    core_GPIO_init(GPIOA, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+    //core_GPIO_set_heartbeat(GPIO_PIN_RESET);
 
     if (!core_clock_init()) error_handler();
     if (!core_CAN_init(FDCAN1, 1000000)) error_handler();
