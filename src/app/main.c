@@ -19,16 +19,20 @@
 void GPIO_task(void *pvParameters) {
     (void) pvParameters;
     while(true) {
-        //Set GPIO pins high for 500ms
+        //Set GPIO pin 8 high for 500ms, otherwise set low for 500ms
         core_GPIO_digital_write(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
-        core_GPIO_digital_write(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
-        core_GPIO_digital_write(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
         vTaskDelay(500 * portTICK_PERIOD_MS);
-        //set GPIO pins low for 500ms
         core_GPIO_digital_write(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+
+        //Set GPIO pin 9 high for 500ms, otherwise set low for 1000ms
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
+        vTaskDelay(1000 * portTICK_PERIOD_MS);
         core_GPIO_digital_write(GPIOA, GPIO_PIN_9, GPIO_PIN_RESET);
+
+        //Set GPIO pin 10 high for 500ms, otherwise set low for 200ms
+        core_GPIO_digital_write(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
+        vTaskDelay(200 * portTICK_PERIOD_MS);
         core_GPIO_digital_write(GPIOA, GPIO_PIN_10, GPIO_PIN_RESET);
-        vTaskDelay(500 * portTICK_PERIOD_MS);
     }
 }
 
