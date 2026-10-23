@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <inttypes.h>
 
 #include "can.h"
 #include "clock.h"
@@ -48,9 +49,9 @@ void GPIO_task(void *pvParameters) {
         // Code for activity 3 and 4
 
         //Reading a potentiometer value from ADC1 channel 1 and printing it to RTT
-        uint16_t* potentiometer_reading; // Pointer to hold the ADC value read by the potentiometer.
-        core_ADC_read_channel(GPIOB, GPIO_PIN_12, potentiometer_reading);
-        rprintf("The potentiometer is reading: %u\n", (unsigned int)*potentiometer_reading);
+        uint16_t potentiometer_reading = 0; // Pointer to hold the ADC value read by the potentiometer.
+        core_ADC_read_channel(GPIOB, GPIO_PIN_12, &potentiometer_reading);
+        rprintf("The potentiometer is reading: %d\n", potentiometer_reading);
 
         //Start by turning all the leds off
         core_GPIO_digital_write(LED_PORT, LED_1_PIN, GPIO_PIN_RESET);
@@ -91,7 +92,7 @@ int main(void) {
     if (!core_clock_init()) error_handler();
     if (!core_CAN_init(FDCAN1, 1000000)) error_handler();
     
-    int err = xTaskCreate(GPIO_task, "heartbeat", 2000, NULL, 4, NULL);
+    int err = xTaskCreate(GPIO_task, "adc", 2000, NULL, 4, NULL);
     if (err != pdPASS) {
         error_handler();
     }
